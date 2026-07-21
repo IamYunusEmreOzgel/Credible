@@ -51,19 +51,19 @@
                     </div>
                 </div>
 
-                <div class="summary-card" aria-label="Örnek günlük özet">
+                <div class="summary-card" aria-label="Kullanıcının günlük özeti">
                     <div class="card-heading">
                         <div>
                             <span>Bugünkü durum</span>
                             <h2>Günlük Özet</h2>
                         </div>
-                        <span class="date-label">21 Temmuz</span>
+                        <span id="summary-date" class="date-label">—</span>
                     </div>
 
                     <div class="calorie-progress">
                         <div class="progress-circle">
                             <div>
-                                <strong>1.420</strong>
+                                <strong id="summary-calories">—</strong>
                                 <span>kcal alındı</span>
                             </div>
                         </div>
@@ -71,11 +71,11 @@
                         <div class="calorie-details">
                             <div>
                                 <span>Günlük hedef</span>
-                                <strong>2.100 kcal</strong>
+                                <strong id="summary-target">—</strong>
                             </div>
                             <div>
                                 <span>Kalan</span>
-                                <strong>680 kcal</strong>
+                                <strong id="summary-remaining">—</strong>
                             </div>
                         </div>
                     </div>
@@ -84,27 +84,27 @@
                         <div class="macro-item">
                             <div class="macro-label">
                                 <span>Protein</span>
-                                <strong>82 / 130 g</strong>
+                                <strong id="summary-protein">—</strong>
                             </div>
-                            <div class="bar"><span style="width: 63%"></span></div>
                         </div>
 
                         <div class="macro-item">
                             <div class="macro-label">
                                 <span>Karbonhidrat</span>
-                                <strong>148 / 230 g</strong>
+                                <strong id="summary-carbohydrates">—</strong>
                             </div>
-                            <div class="bar"><span style="width: 64%"></span></div>
                         </div>
 
                         <div class="macro-item">
                             <div class="macro-label">
                                 <span>Yağ</span>
-                                <strong>46 / 70 g</strong>
+                                <strong id="summary-fat">—</strong>
                             </div>
-                            <div class="bar"><span style="width: 66%"></span></div>
                         </div>
                     </div>
+
+                    <p id="summary-status" aria-live="polite">Günlük özet hazırlanıyor...</p>
+                    <a id="summary-login-link" class="text-link" href="pages/login.html">Giriş yap</a>
                 </div>
             </div>
         </section>
@@ -135,5 +135,9 @@
             <span>© 2026 Credible</span>
         </div>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/home-summary.js"></script>
 </body>
 </html>
