@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Credible ile gün içinde tükettiğin yiyecekleri kaydet ve toplam kalori, protein ve yağ miktarını takip et.">
+    <meta name="description" content="Credible ile gün içinde tükettiğin yiyecekleri kaydet ve toplam kalori, protein, yağ ve karbonhidrat miktarını takip et.">
     <title>Günlük Kalori Takibi | Credible</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,7 +37,7 @@
                     <h1>Yemeğini seç, porsiyonunu gir, günün toplamını gör.</h1>
                     <p>
                         Listeden tükettiğin yiyeceği seç ve gram cinsinden porsiyonunu gir. Credible;
-                        kalori, protein ve yağ değerlerini otomatik hesaplasın.
+                        kalori, protein, yağ ve karbonhidrat değerlerini otomatik hesaplasın.
                     </p>
 
                     <div class="daily-total" aria-live="polite">
@@ -49,6 +49,7 @@
                         <div class="macro-totals">
                             <p><span>Protein</span><strong id="total-protein">0 g</strong></p>
                             <p><span>Yağ</span><strong id="total-fat">0 g</strong></p>
+                            <p><span>Karbonhidrat</span><strong id="total-carbohydrates">0 g</strong></p>
                         </div>
                         <p id="entry-count">Henüz yemek eklenmedi.</p>
                     </div>
@@ -79,6 +80,7 @@
                                 <p><strong id="preview-calories">0</strong><small>kcal</small></p>
                                 <p><strong id="preview-protein">0</strong><small>g protein</small></p>
                                 <p><strong id="preview-fat">0</strong><small>g yağ</small></p>
+                                <p><strong id="preview-carbohydrates">0</strong><small>g karbonhidrat</small></p>
                             </div>
                         </section>
 
