@@ -16,5 +16,15 @@ window.FOOD_DATABASE = [
     { id: "salmon", name: "Somon (pişmiş)", calories: 206, protein: 22, fat: 12, carbohydrates: 0 },
     { id: "cheese", name: "Beyaz peynir", calories: 264, protein: 14, fat: 21, carbohydrates: 4.1 },
     { id: "olive-oil", name: "Zeytinyağı", calories: 884, protein: 0, fat: 100, carbohydrates: 0 },
-    { id: "almonds", name: "Badem", calories: 579, protein: 21.2, fat: 49.9, carbohydrates: 21.6 }
+    { id: "almonds", name: "Badem", calories: 579, protein: 21.2, fat: 49.9, carbohydrates: 21.6 },
+    { id: "lentil-soup", name: "Mercimek çorbası", calories: 75, protein: 4.2, fat: 1.85, carbohydrates: 10.73 },
+    { id: "cream-chicken-soup", name: "Kremalı tavuk çorbası", calories: 23, protein: 0.5, fat: 0.6, carbohydrates: 3.8 },
+    { id: "cream-mushroom-soup", name: "Kremalı mantar çorbası", calories: 68, protein: 2.44, fat: 3.97, carbohydrates: 5.73 },
+    { id: "vermicelli-soup", name: "Şehriye çorbası", calories: 17, protein: 0.6, fat: 0.1, carbohydrates: 3.5 },
+    { id: "tomato-soup", name: "Domates çorbası", calories: 42, protein: 1.25, fat: 1.2, carbohydrates: 7.35 },
+    { id: "tarhana-soup", name: "Tarhana çorbası", calories: 22, protein: 0.7, fat: 0.2, carbohydrates: 4 },
+    { id: "ayran-asi-soup", name: "Ayran aşı çorbası", calories: 66, protein: 3.4, fat: 3.4, carbohydrates: 5 },
+    { id: "corn-soup", name: "Mısır çorbası", calories: 67, protein: 2.18, fat: 3.76, carbohydrates: 6.63 },
+    { id: "kelle-paca-soup", name: "Kelle paça çorbası", calories: 135, protein: 14.32, fat: 6.37, carbohydrates: 4.25 },
+    { id: "ezogelin-soup", name: "Ezogelin çorbası", calories: 52, protein: 3.45, fat: 0.16, carbohydrates: 9.35 }
 ];
