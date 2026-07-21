@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Credible ile günlük bazal metabolizma ihtiyacını hesapla.">
+    <meta name="description" content="Credible ile bazal metabolizma hızını ve günlük kalori ihtiyacını hesapla, hedefini hesabına kaydet.">
     <title>Kalori İhtiyacını Hesapla | Credible</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,14 +33,15 @@
         <section class="calculator-intro">
             <div class="container calculator-layout">
                 <div class="calculator-copy">
-                    <span class="eyebrow">Bazal metabolizma hesabı</span>
-                    <h1>Vücudunun dinlenirken harcadığı enerjiyi öğren.</h1>
+                    <span class="eyebrow">Günlük enerji ihtiyacı</span>
+                    <h1>Vücudunun bir günde yaklaşık ne kadar enerji harcadığını öğren.</h1>
                     <p>
-                        Yaş, boy, kilo ve cinsiyet bilgilerine göre günlük bazal metabolizma hızını
-                        yaklaşık olarak hesapla.
+                        Yaş, boy, kilo, cinsiyet ve aktivite seviyene göre bazal metabolizma hızını
+                        ve günlük toplam kalori ihtiyacını hesapla.
                     </p>
                     <p class="calculator-note">
-                        Bu sonuç tahmini bir değerdir; günlük toplam enerji ihtiyacını göstermez.
+                        Sonuç tahmini bir değerdir. Sağlık durumuna veya özel bir beslenme planına göre
+                        profesyonel destek gerekebilir.
                     </p>
                 </div>
 
@@ -84,28 +85,57 @@
                                     <small>kg</small>
                                 </div>
                             </label>
+
+                            <label class="form-field form-field-full">
+                                <span>Aktivite seviyesi</span>
+                                <div class="input-wrap select-wrap">
+                                    <select id="activity-level" name="activityLevel" required>
+                                        <option value="1.2">Hareketsiz — çok az egzersiz</option>
+                                        <option value="1.375">Az hareketli — haftada 1-3 gün</option>
+                                        <option value="1.55" selected>Orta hareketli — haftada 3-5 gün</option>
+                                        <option value="1.725">Çok hareketli — haftada 6-7 gün</option>
+                                        <option value="1.9">Çok yoğun — ağır fiziksel aktivite</option>
+                                    </select>
+                                </div>
+                            </label>
                         </div>
 
                         <p id="form-error" class="form-error" role="alert"></p>
-                        <button class="calculate-button" type="submit">Bazal Metabolizmamı Hesapla</button>
+                        <button class="calculate-button" type="submit">Günlük Kalori İhtiyacımı Hesapla</button>
                     </form>
 
                     <section id="result" class="result-panel" aria-live="polite" hidden>
-                        <span>Tahmini bazal metabolizma hızın</span>
-                        <div class="result-value">
-                            <strong id="bmr-value">0</strong>
-                            <small>kcal / gün</small>
+                        <div class="result-summary-grid">
+                            <div>
+                                <span>Bazal metabolizma hızın</span>
+                                <div class="result-value result-value-small">
+                                    <strong id="bmr-value">0</strong>
+                                    <small>kcal / gün</small>
+                                </div>
+                            </div>
+                            <div class="target-result">
+                                <span>Tahmini günlük kalori ihtiyacın</span>
+                                <div class="result-value">
+                                    <strong id="daily-calorie-value">0</strong>
+                                    <small>kcal / gün</small>
+                                </div>
+                            </div>
                         </div>
                         <p>
-                            Bu değer, gün boyunca tamamen dinleniyor olsan bile vücudunun temel
-                            işlevlerini sürdürebilmek için harcadığı yaklaşık enerjidir.
+                            Günlük hedef olarak aktivite seviyen dahil edilerek hesaplanan toplam enerji ihtiyacı kaydedilir.
                         </p>
+                        <button id="save-target-button" class="save-target-button" type="button">
+                            Bu değeri günlük hedefim olarak kaydet
+                        </button>
+                        <p id="save-target-status" class="save-target-status" role="status"></p>
                     </section>
                 </div>
             </div>
         </section>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-config.js"></script>
     <script src="../js/calorie-calculator.js"></script>
 </body>
 </html>
