@@ -63,5 +63,14 @@ window.FOOD_DATABASE = [
     { id: "beef-kavurma", name: "Kavurma", calories: 290, protein: 25, fat: 21, carbohydrates: 0 },
     { id: "beef-stew", name: "Yahni", calories: 145, protein: 12, fat: 8, carbohydrates: 6 },
     { id: "meat-potato-stew", name: "Etli patates yemeği", calories: 120, protein: 7, fat: 5, carbohydrates: 12 },
-    { id: "fried-beef", name: "Et kızartma", calories: 275, protein: 25, fat: 19, carbohydrates: 0 }
+    { id: "fried-beef", name: "Et kızartma", calories: 275, protein: 25, fat: 19, carbohydrates: 0 },
+    { id: "crepe", name: "Krep", calories: 227, protein: 6.4, fat: 9.7, carbohydrates: 28.3 },
+    { id: "fried-dough", name: "Hamur kızartması", calories: 330, protein: 7, fat: 16, carbohydrates: 39 },
+    { id: "white-bread-slice", name: "Ekmek dilimi (beyaz)", calories: 265, protein: 9, fat: 3.2, carbohydrates: 49 },
+    { id: "bran-bread", name: "Kepek ekmeği", calories: 259, protein: 9.13, fat: 4.11, carbohydrates: 47.14 },
+    { id: "cigar-borek", name: "Sigara böreği", calories: 420, protein: 7.4, fat: 31.7, carbohydrates: 26.3 },
+    { id: "tray-borek", name: "Tepsi böreği (peynirli)", calories: 238, protein: 7.5, fat: 10.1, carbohydrates: 29.3 },
+    { id: "cocoa-cake", name: "Kakaolu kek", calories: 381, protein: 5.8, fat: 18, carbohydrates: 54 },
+    { id: "wet-cake", name: "Islak kek", calories: 383, protein: 6.7, fat: 23.4, carbohydrates: 35.8 },
+    { id: "sekerpare", name: "Şekerpare", calories: 296, protein: 3.2, fat: 6.8, carbohydrates: 55.5 }
 ];
