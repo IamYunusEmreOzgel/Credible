@@ -10,6 +10,59 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/daily-calorie-tracker.css">
+    <style>
+        .food-search-wrap {
+            position: relative;
+        }
+
+        .food-search-results {
+            position: absolute;
+            z-index: 20;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            max-height: 280px;
+            overflow-y: auto;
+            border: 1px solid var(--line);
+            border-radius: 3px;
+            background: var(--surface);
+            box-shadow: 0 12px 28px rgba(30, 45, 36, 0.14);
+        }
+
+        .food-search-results[hidden] {
+            display: none;
+        }
+
+        .food-search-option {
+            display: block;
+            width: 100%;
+            padding: 12px 14px;
+            border: 0;
+            border-bottom: 1px solid var(--line);
+            color: var(--text);
+            background: transparent;
+            font: inherit;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .food-search-option:last-child {
+            border-bottom: 0;
+        }
+
+        .food-search-option:hover,
+        .food-search-option:focus,
+        .food-search-option.is-active {
+            background: var(--surface-soft);
+            outline: none;
+        }
+
+        .food-search-empty {
+            padding: 12px 14px;
+            color: var(--muted);
+            font-size: 0.86rem;
+        }
+    </style>
 </head>
 <body>
     <header class="site-header">
@@ -56,8 +109,10 @@
                         <div class="food-form-grid">
                             <label class="tracker-field tracker-field-full">
                                 <span>Yiyecek ara ve seç</span>
-                                <input id="food-search" name="foodName" type="text" list="food-options" placeholder="Örneğin: tavuk, çorba, pilav" autocomplete="off" required>
-                                <datalist id="food-options"></datalist>
+                                <div class="food-search-wrap">
+                                    <input id="food-search" name="foodName" type="text" placeholder="Örneğin: tavuk, çorba, pilav" autocomplete="off" aria-autocomplete="list" aria-controls="food-search-results" aria-expanded="false" required>
+                                    <div id="food-search-results" class="food-search-results" role="listbox" hidden></div>
+                                </div>
                                 <select id="food-select" name="foodId" required hidden>
                                     <option value="">Bir yiyecek seç</option>
                                 </select>
@@ -103,42 +158,117 @@
     <script src="../data/foods.js"></script>
     <script>
         const searchableFoodInput = document.querySelector("#food-search");
-        const searchableFoodOptions = document.querySelector("#food-options");
+        const foodSearchResults = document.querySelector("#food-search-results");
         const originalFoodSelect = document.querySelector("#food-select");
+        const searchableFoods = Array.isArray(window.FOOD_DATABASE)
+            ? window.FOOD_DATABASE.slice().sort((a, b) => a.name.localeCompare(b.name, "tr"))
+            : [];
+        let activeResultIndex = -1;
+        let visibleFoods = [];
 
         function normalizeFoodName(value) {
-            return value.trim().toLocaleLowerCase("tr-TR");
+            return value
+                .trim()
+                .toLocaleLowerCase("tr-TR")
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "");
         }
 
-        function refreshSearchableFoodOptions() {
-            searchableFoodOptions.innerHTML = "";
-            Array.from(originalFoodSelect.options).slice(1).forEach((selectOption) => {
-                const option = document.createElement("option");
-                option.value = selectOption.textContent;
-                searchableFoodOptions.append(option);
-            });
+        function renderFoodSearchResults() {
+            const query = normalizeFoodName(searchableFoodInput.value);
+            visibleFoods = searchableFoods
+                .filter((food) => !query || normalizeFoodName(food.name).includes(query))
+                .slice(0, 15);
+
+            foodSearchResults.innerHTML = "";
+            activeResultIndex = -1;
+
+            if (visibleFoods.length === 0) {
+                const emptyMessage = document.createElement("div");
+                emptyMessage.className = "food-search-empty";
+                emptyMessage.textContent = "Eşleşen yiyecek bulunamadı.";
+                foodSearchResults.append(emptyMessage);
+            } else {
+                visibleFoods.forEach((food, index) => {
+                    const button = document.createElement("button");
+                    button.type = "button";
+                    button.className = "food-search-option";
+                    button.textContent = food.name;
+                    button.dataset.foodId = food.id;
+                    button.dataset.index = String(index);
+                    button.setAttribute("role", "option");
+                    button.addEventListener("mousedown", (event) => event.preventDefault());
+                    button.addEventListener("click", () => selectFood(food));
+                    foodSearchResults.append(button);
+                });
+            }
+
+            foodSearchResults.hidden = false;
+            searchableFoodInput.setAttribute("aria-expanded", "true");
         }
 
-        function syncSearchableFoodSelection() {
-            const searchedName = normalizeFoodName(searchableFoodInput.value);
-            const matchingOption = Array.from(originalFoodSelect.options).find((option) =>
-                normalizeFoodName(option.textContent) === searchedName
-            );
+        function hideFoodSearchResults() {
+            foodSearchResults.hidden = true;
+            searchableFoodInput.setAttribute("aria-expanded", "false");
+            activeResultIndex = -1;
+        }
 
-            originalFoodSelect.value = matchingOption ? matchingOption.value : "";
+        function selectFood(food) {
+            searchableFoodInput.value = food.name;
+            originalFoodSelect.value = food.id;
+            originalFoodSelect.dispatchEvent(new Event("change", { bubbles: true }));
+            hideFoodSearchResults();
+        }
+
+        function syncTypedFoodSelection() {
+            const typedName = normalizeFoodName(searchableFoodInput.value);
+            const exactFood = searchableFoods.find((food) => normalizeFoodName(food.name) === typedName);
+            originalFoodSelect.value = exactFood ? exactFood.id : "";
             originalFoodSelect.dispatchEvent(new Event("change", { bubbles: true }));
         }
 
-        searchableFoodInput.addEventListener("input", syncSearchableFoodSelection);
-        searchableFoodInput.addEventListener("change", syncSearchableFoodSelection);
+        function updateActiveResult(direction) {
+            const options = Array.from(foodSearchResults.querySelectorAll(".food-search-option"));
+            if (options.length === 0) return;
 
-        new MutationObserver(refreshSearchableFoodOptions).observe(originalFoodSelect, { childList: true });
+            activeResultIndex = (activeResultIndex + direction + options.length) % options.length;
+            options.forEach((option, index) => option.classList.toggle("is-active", index === activeResultIndex));
+            options[activeResultIndex].scrollIntoView({ block: "nearest" });
+        }
+
+        searchableFoodInput.addEventListener("focus", renderFoodSearchResults);
+        searchableFoodInput.addEventListener("input", () => {
+            syncTypedFoodSelection();
+            renderFoodSearchResults();
+        });
+
+        searchableFoodInput.addEventListener("keydown", (event) => {
+            if (event.key === "ArrowDown") {
+                event.preventDefault();
+                if (foodSearchResults.hidden) renderFoodSearchResults();
+                updateActiveResult(1);
+            } else if (event.key === "ArrowUp") {
+                event.preventDefault();
+                updateActiveResult(-1);
+            } else if (event.key === "Enter" && activeResultIndex >= 0) {
+                event.preventDefault();
+                selectFood(visibleFoods[activeResultIndex]);
+            } else if (event.key === "Escape") {
+                hideFoodSearchResults();
+            }
+        });
+
+        searchableFoodInput.addEventListener("blur", () => {
+            window.setTimeout(hideFoodSearchResults, 120);
+        });
+
         originalFoodSelect.focus = () => searchableFoodInput.focus();
 
         document.querySelector("#food-form").addEventListener("reset", () => {
             window.setTimeout(() => {
                 searchableFoodInput.value = "";
                 originalFoodSelect.value = "";
+                hideFoodSearchResults();
             }, 0);
         });
     </script>
