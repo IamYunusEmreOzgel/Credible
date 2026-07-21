@@ -58,6 +58,9 @@
                                 <span>Yiyecek ara ve seç</span>
                                 <input id="food-search" name="foodName" type="text" list="food-options" placeholder="Örneğin: tavuk, çorba, pilav" autocomplete="off" required>
                                 <datalist id="food-options"></datalist>
+                                <select id="food-select" name="foodId" required hidden>
+                                    <option value="">Bir yiyecek seç</option>
+                                </select>
                             </label>
                             <label class="tracker-field tracker-field-full">
                                 <span>Porsiyon miktarı</span>
@@ -98,6 +101,47 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/supabase-config.js"></script>
     <script src="../data/foods.js"></script>
+    <script>
+        const searchableFoodInput = document.querySelector("#food-search");
+        const searchableFoodOptions = document.querySelector("#food-options");
+        const originalFoodSelect = document.querySelector("#food-select");
+
+        function normalizeFoodName(value) {
+            return value.trim().toLocaleLowerCase("tr-TR");
+        }
+
+        function refreshSearchableFoodOptions() {
+            searchableFoodOptions.innerHTML = "";
+            Array.from(originalFoodSelect.options).slice(1).forEach((selectOption) => {
+                const option = document.createElement("option");
+                option.value = selectOption.textContent;
+                searchableFoodOptions.append(option);
+            });
+        }
+
+        function syncSearchableFoodSelection() {
+            const searchedName = normalizeFoodName(searchableFoodInput.value);
+            const matchingOption = Array.from(originalFoodSelect.options).find((option) =>
+                normalizeFoodName(option.textContent) === searchedName
+            );
+
+            originalFoodSelect.value = matchingOption ? matchingOption.value : "";
+            originalFoodSelect.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+
+        searchableFoodInput.addEventListener("input", syncSearchableFoodSelection);
+        searchableFoodInput.addEventListener("change", syncSearchableFoodSelection);
+
+        new MutationObserver(refreshSearchableFoodOptions).observe(originalFoodSelect, { childList: true });
+        originalFoodSelect.focus = () => searchableFoodInput.focus();
+
+        document.querySelector("#food-form").addEventListener("reset", () => {
+            window.setTimeout(() => {
+                searchableFoodInput.value = "";
+                originalFoodSelect.value = "";
+            }, 0);
+        });
+    </script>
     <script src="../js/daily-calorie-tracker.js"></script>
 </body>
 </html>
