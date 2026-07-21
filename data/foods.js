@@ -72,5 +72,6 @@ window.FOOD_DATABASE = [
     { id: "tray-borek", name: "Tepsi böreği (peynirli)", calories: 238, protein: 7.5, fat: 10.1, carbohydrates: 29.3 },
     { id: "cocoa-cake", name: "Kakaolu kek", calories: 381, protein: 5.8, fat: 18, carbohydrates: 54 },
     { id: "wet-cake", name: "Islak kek", calories: 383, protein: 6.7, fat: 23.4, carbohydrates: 35.8 },
-    { id: "sekerpare", name: "Şekerpare", calories: 296, protein: 3.2, fat: 6.8, carbohydrates: 55.5 }
+    { id: "sekerpare", name: "Şekerpare", calories: 296, protein: 3.2, fat: 6.8, carbohydrates: 55.5 },
+    { id: "chicken-keskek", name: "Tavuklu keşkek", calories: 177, protein: 15.1, fat: 4.1, carbohydrates: 19.8 }
 ];
