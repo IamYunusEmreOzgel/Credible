@@ -9,6 +9,8 @@
     --primary-dark: #244733;
     --accent: #d7e6d8;
     --shadow: 12px 14px 0 rgba(49, 92, 67, 0.08);
+    --font-body: "DM Sans", sans-serif;
+    --font-display: "Fraunces", serif;
     --container: 1180px;
 }
 
@@ -23,14 +25,15 @@ html {
 }
 
 body {
-    font-family: "Inter", sans-serif;
+    font-family: var(--font-body);
     color: var(--text);
     background:
         linear-gradient(rgba(49, 92, 67, 0.035) 1px, transparent 1px),
         linear-gradient(90deg, rgba(49, 92, 67, 0.035) 1px, transparent 1px),
         var(--background);
     background-size: 42px 42px;
-    line-height: 1.6;
+    line-height: 1.65;
+    font-variation-settings: "opsz" 14;
 }
 
 a {
@@ -41,6 +44,14 @@ a {
 button,
 a {
     -webkit-tap-highlight-color: transparent;
+}
+
+h1,
+h2,
+h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    text-wrap: balance;
 }
 
 .container {
@@ -69,9 +80,10 @@ a {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    font-size: 1.05rem;
+    font-family: var(--font-display);
+    font-size: 1.22rem;
     font-weight: 700;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.035em;
 }
 
 .brand-mark {
@@ -84,7 +96,9 @@ a {
     color: #fff;
     background: var(--primary);
     box-shadow: 4px 4px 0 var(--accent);
-    font-size: 0.95rem;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 700;
 }
 
 .main-nav {
@@ -92,8 +106,9 @@ a {
     align-items: center;
     gap: 30px;
     color: var(--muted);
-    font-size: 0.92rem;
-    font-weight: 500;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
 }
 
 .main-nav a,
@@ -115,7 +130,8 @@ a {
     border-radius: 3px;
     color: #fff;
     background: var(--primary);
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: -0.015em;
     box-shadow: 4px 4px 0 var(--accent);
     transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
@@ -123,7 +139,7 @@ a {
 .header-button {
     min-height: 42px;
     padding: 0 18px;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
 }
 
 .primary-button {
@@ -156,24 +172,25 @@ a {
     padding-left: 14px;
     border-left: 3px solid var(--primary);
     color: var(--primary);
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     font-weight: 700;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
 }
 
 .hero h1 {
     max-width: 680px;
-    font-size: clamp(3rem, 6vw, 5.5rem);
-    line-height: 0.98;
-    letter-spacing: -0.065em;
+    font-size: clamp(3.2rem, 6vw, 5.8rem);
+    line-height: 0.94;
+    letter-spacing: -0.055em;
 }
 
 .hero-content > p {
-    max-width: 620px;
-    margin-top: 28px;
+    max-width: 610px;
+    margin-top: 30px;
     color: var(--muted);
-    font-size: 1.08rem;
+    font-size: 1.06rem;
+    letter-spacing: -0.012em;
 }
 
 .hero-actions {
@@ -185,8 +202,8 @@ a {
 
 .text-link {
     color: var(--muted);
-    font-size: 0.94rem;
-    font-weight: 600;
+    font-size: 0.92rem;
+    font-weight: 700;
 }
 
 .hero-notes {
@@ -195,7 +212,8 @@ a {
     gap: 12px 22px;
     margin-top: 34px;
     color: var(--muted);
-    font-size: 0.82rem;
+    font-size: 0.8rem;
+    font-weight: 500;
 }
 
 .hero-notes span::before {
@@ -240,12 +258,14 @@ a {
 .calorie-details span,
 .macro-label span {
     color: var(--muted);
-    font-size: 0.8rem;
+    font-size: 0.78rem;
+    font-weight: 500;
 }
 
 .card-heading h2 {
-    margin-top: 3px;
-    font-size: 1.25rem;
+    margin-top: 2px;
+    font-size: 1.5rem;
+    letter-spacing: -0.035em;
 }
 
 .date-label {
@@ -253,6 +273,7 @@ a {
     border: 1px solid var(--line);
     border-radius: 2px;
     background: var(--surface-soft);
+    font-family: var(--font-body);
 }
 
 .calorie-progress {
@@ -289,13 +310,16 @@ a {
 }
 
 .progress-circle strong {
-    font-size: 1.8rem;
-    letter-spacing: -0.05em;
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: -0.045em;
 }
 
 .progress-circle span {
     color: var(--muted);
-    font-size: 0.75rem;
+    font-size: 0.72rem;
+    font-weight: 600;
 }
 
 .calorie-details {
@@ -312,7 +336,9 @@ a {
 .calorie-details strong {
     display: block;
     margin-top: 3px;
-    font-size: 1rem;
+    font-family: var(--font-display);
+    font-size: 1.16rem;
+    font-weight: 600;
 }
 
 .macro-list {
@@ -325,7 +351,8 @@ a {
 }
 
 .macro-label strong {
-    font-size: 0.78rem;
+    font-size: 0.76rem;
+    font-weight: 700;
 }
 
 .bar {
@@ -348,16 +375,16 @@ a {
 }
 
 .section-heading {
-    max-width: 680px;
+    max-width: 720px;
     margin-bottom: 42px;
 }
 
 .section-heading h2,
 .info-panel h2,
 .calculator-box h2 {
-    font-size: clamp(2rem, 4vw, 3.5rem);
-    line-height: 1.08;
-    letter-spacing: -0.05em;
+    font-size: clamp(2.25rem, 4vw, 3.8rem);
+    line-height: 1.02;
+    letter-spacing: -0.045em;
 }
 
 .feature-grid {
@@ -385,20 +412,22 @@ a {
 
 .feature-number {
     color: var(--primary);
-    font-size: 0.78rem;
+    font-size: 0.74rem;
     font-weight: 700;
+    letter-spacing: 0.08em;
 }
 
 .feature-card h3 {
     margin: 56px 0 12px;
-    font-size: 1.2rem;
-    letter-spacing: -0.025em;
+    font-size: 1.55rem;
+    line-height: 1.08;
+    letter-spacing: -0.035em;
 }
 
 .feature-card p,
 .calculator-box p {
     color: var(--muted);
-    font-size: 0.94rem;
+    font-size: 0.92rem;
 }
 
 .info-panel {
@@ -444,11 +473,14 @@ a {
     place-items: center;
     border: 1px solid rgba(255, 255, 255, 0.35);
     border-radius: 2px;
-    font-size: 0.78rem;
+    font-family: var(--font-display);
+    font-size: 0.92rem;
+    font-weight: 600;
 }
 
 .steps p {
     color: rgba(255, 255, 255, 0.78);
+    font-size: 0.96rem;
 }
 
 .calculator-box {
@@ -458,7 +490,7 @@ a {
 }
 
 .calculator-box > div {
-    max-width: 650px;
+    max-width: 680px;
 }
 
 .calculator-box p {
@@ -473,8 +505,8 @@ a {
     color: var(--muted);
     background: var(--surface-soft);
     font: inherit;
-    font-size: 0.9rem;
-    font-weight: 600;
+    font-size: 0.88rem;
+    font-weight: 700;
     cursor: not-allowed;
 }
 
@@ -485,7 +517,7 @@ footer {
 
 .footer-content {
     color: var(--muted);
-    font-size: 0.82rem;
+    font-size: 0.8rem;
 }
 
 .footer-content .brand {
@@ -552,7 +584,7 @@ footer {
     }
 
     .hero h1 {
-        font-size: clamp(2.65rem, 14vw, 4rem);
+        font-size: clamp(2.8rem, 14vw, 4.3rem);
     }
 
     .hero-actions,
