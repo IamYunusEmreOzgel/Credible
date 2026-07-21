@@ -22,9 +22,10 @@ calculatorForm.addEventListener("submit", (event) => {
 
     errorMessage.textContent = "";
 
-    // Mifflin-St Jeor denklemi
-    const genderConstant = gender === "male" ? 5 : -161;
-    const bmr = (10 * weight) + (6.25 * height) - (5 * age) + genderConstant;
+    // Harris-Benedict denklemi
+    const bmr = gender === "male"
+        ? 66.5 + (13.75 * weight) + (5 * height) - (6.75 * age)
+        : 655.1 + (9.56 * weight) + (1.85 * height) - (4.68 * age);
 
     bmrValue.textContent = Math.round(bmr).toLocaleString("tr-TR");
     resultPanel.hidden = false;
