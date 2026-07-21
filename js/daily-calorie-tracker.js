@@ -10,6 +10,8 @@ const previewCarbohydrates = document.querySelector("#preview-carbohydrates");
 const foodList = document.querySelector("#food-list");
 const emptyLog = document.querySelector("#empty-log");
 const clearLogButton = document.querySelector("#clear-log");
+const logoutButton = document.querySelector("#logout-button");
+const addFoodButton = document.querySelector("#add-food-button");
 const totalCalories = document.querySelector("#total-calories");
 const totalProtein = document.querySelector("#total-protein");
 const totalFat = document.querySelector("#total-fat");
@@ -18,16 +20,33 @@ const entryCount = document.querySelector("#entry-count");
 const foodError = document.querySelector("#food-error");
 
 const foods = Array.isArray(window.FOOD_DATABASE) ? window.FOOD_DATABASE : [];
-const storageKey = `credible-food-log-${getTodayKey()}`;
-let foodEntries = loadEntries();
+const supabaseClient = window.credibleSupabase;
+let currentUser = null;
+let foodEntries = [];
 
-populateFoodSelect();
-renderEntries();
+initializePage();
 
 foodSelect.addEventListener("change", updateNutritionPreview);
 portionInput.addEventListener("input", updateNutritionPreview);
+foodForm.addEventListener("submit", addFoodEntry);
+foodList.addEventListener("click", removeFoodEntry);
+clearLogButton.addEventListener("click", clearTodayEntries);
+logoutButton.addEventListener("click", logout);
 
-foodForm.addEventListener("submit", (event) => {
+async function initializePage() {
+    const { data, error } = await supabaseClient.auth.getUser();
+
+    if (error || !data.user) {
+        window.location.replace("login.html");
+        return;
+    }
+
+    currentUser = data.user;
+    populateFoodSelect();
+    await loadEntries();
+}
+
+async function addFoodEntry(event) {
     event.preventDefault();
 
     const food = getSelectedFood();
@@ -39,67 +58,123 @@ foodForm.addEventListener("submit", (event) => {
         return;
     }
 
+    setFormLoading(true);
     foodError.textContent = "";
     const nutrition = calculateNutrition(food, portionGrams);
 
-    foodEntries.unshift({
-        id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
-        foodId: food.id,
-        foodName: food.name,
-        portionGrams,
-        calories: nutrition.calories,
-        protein: nutrition.protein,
-        fat: nutrition.fat,
-        carbohydrates: nutrition.carbohydrates
-    });
+    const { data, error } = await supabaseClient
+        .from("food_entries")
+        .insert({
+            user_id: currentUser.id,
+            entry_date: getTodayKey(),
+            food_id: food.id,
+            food_name: food.name,
+            portion_grams: portionGrams,
+            calories: nutrition.calories,
+            protein: nutrition.protein,
+            fat: nutrition.fat,
+            carbohydrates: nutrition.carbohydrates
+        })
+        .select()
+        .single();
 
-    saveEntries();
+    if (error) {
+        foodError.textContent = "Kayıt eklenemedi. Supabase tablo ve güvenlik ayarlarını kontrol et.";
+        console.error(error);
+        setFormLoading(false);
+        return;
+    }
+
+    foodEntries.unshift(normalizeEntry(data));
     renderEntries();
     foodForm.reset();
     nutritionPreview.hidden = true;
     foodSelect.focus();
-});
+    setFormLoading(false);
+}
 
-foodList.addEventListener("click", (event) => {
+async function loadEntries() {
+    entryCount.textContent = "Kayıtlar yükleniyor...";
+
+    const { data, error } = await supabaseClient
+        .from("food_entries")
+        .select("*")
+        .eq("entry_date", getTodayKey())
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        foodError.textContent = "Kayıtlar yüklenemedi. Supabase tablo ve RLS ayarlarını kontrol et.";
+        console.error(error);
+        foodEntries = [];
+    } else {
+        foodEntries = data.map(normalizeEntry);
+    }
+
+    renderEntries();
+}
+
+async function removeFoodEntry(event) {
     const removeButton = event.target.closest("[data-remove-id]");
+    if (!removeButton) return;
 
-    if (!removeButton) {
+    removeButton.disabled = true;
+    const { error } = await supabaseClient
+        .from("food_entries")
+        .delete()
+        .eq("id", removeButton.dataset.removeId);
+
+    if (error) {
+        foodError.textContent = "Kayıt silinemedi.";
+        removeButton.disabled = false;
         return;
     }
 
     foodEntries = foodEntries.filter((entry) => entry.id !== removeButton.dataset.removeId);
-    saveEntries();
     renderEntries();
-});
+}
 
-clearLogButton.addEventListener("click", () => {
+async function clearTodayEntries() {
+    clearLogButton.disabled = true;
+    const { error } = await supabaseClient
+        .from("food_entries")
+        .delete()
+        .eq("entry_date", getTodayKey());
+
+    if (error) {
+        foodError.textContent = "Günlük kayıtlar temizlenemedi.";
+        clearLogButton.disabled = false;
+        return;
+    }
+
     foodEntries = [];
-    saveEntries();
     renderEntries();
-});
+    clearLogButton.disabled = false;
+}
+
+async function logout() {
+    logoutButton.disabled = true;
+    await supabaseClient.auth.signOut();
+    window.location.replace("login.html");
+}
 
 function populateFoodSelect() {
-    foods
-        .slice()
-        .sort((a, b) => a.name.localeCompare(b.name, "tr"))
-        .forEach((food) => {
-            const option = document.createElement("option");
-            option.value = food.id;
-            option.textContent = food.name;
-            foodSelect.append(option);
-        });
+    foods.slice().sort((a, b) => a.name.localeCompare(b.name, "tr")).forEach((food) => {
+        const option = document.createElement("option");
+        option.value = food.id;
+        option.textContent = food.name;
+        foodSelect.append(option);
+    });
 }
 
 function updateNutritionPreview() {
     const food = getSelectedFood();
-    const portionGrams = Number(portionInput.value);
-
     if (!food) {
         nutritionPreview.hidden = true;
         return;
     }
 
-    const grams = Number.isFinite(portionGrams) && portionGrams > 0 ? portionGrams : 100;
+    const value = Number(portionInput.value);
+    const grams = Number.isFinite(value) && value > 0 ? value : 100;
     const nutrition = calculateNutrition(food, grams);
 
     previewBasis.textContent = `${formatNumber(grams)} gram için`;
@@ -116,7 +191,6 @@ function getSelectedFood() {
 
 function calculateNutrition(food, portionGrams) {
     const multiplier = portionGrams / 100;
-
     return {
         calories: roundTo(food.calories * multiplier, 0),
         protein: roundTo(food.protein * multiplier, 1),
@@ -125,84 +199,60 @@ function calculateNutrition(food, portionGrams) {
     };
 }
 
+function normalizeEntry(entry) {
+    return {
+        id: String(entry.id),
+        foodName: entry.food_name,
+        portionGrams: Number(entry.portion_grams),
+        calories: Number(entry.calories),
+        protein: Number(entry.protein),
+        fat: Number(entry.fat),
+        carbohydrates: Number(entry.carbohydrates || 0)
+    };
+}
+
 function renderEntries() {
     foodList.innerHTML = "";
 
     foodEntries.forEach((entry) => {
-        const listItem = document.createElement("li");
-        listItem.className = "food-item";
-
-        const details = document.createElement("div");
-        const title = document.createElement("h3");
-        const portion = document.createElement("p");
-        const nutrition = document.createElement("div");
-        const calories = document.createElement("strong");
-        const macros = document.createElement("small");
-        const removeButton = document.createElement("button");
-
-        title.textContent = entry.foodName;
-        portion.textContent = `${formatNumber(entry.portionGrams)} gram`;
-        calories.textContent = `${formatNumber(entry.calories)} kcal`;
-        macros.textContent = `${formatNumber(entry.protein)} g protein · ${formatNumber(entry.fat)} g yağ · ${formatNumber(entry.carbohydrates || 0)} g karbonhidrat`;
-        nutrition.className = "food-item-nutrition";
-
-        removeButton.type = "button";
-        removeButton.className = "remove-food-button";
-        removeButton.dataset.removeId = entry.id;
-        removeButton.textContent = "Sil";
-        removeButton.setAttribute("aria-label", `${entry.foodName} kaydını sil`);
-
-        details.append(title, portion);
-        nutrition.append(calories, macros);
-        listItem.append(details, nutrition, removeButton);
-        foodList.append(listItem);
+        const item = document.createElement("li");
+        item.className = "food-item";
+        item.innerHTML = `<div><h3></h3><p></p></div><div class="food-item-nutrition"><strong></strong><small></small></div><button class="remove-food-button" type="button">Sil</button>`;
+        item.querySelector("h3").textContent = entry.foodName;
+        item.querySelector("p").textContent = `${formatNumber(entry.portionGrams)} gram`;
+        item.querySelector("strong").textContent = `${formatNumber(entry.calories)} kcal`;
+        item.querySelector("small").textContent = `${formatNumber(entry.protein)} g protein · ${formatNumber(entry.fat)} g yağ · ${formatNumber(entry.carbohydrates)} g karbonhidrat`;
+        const button = item.querySelector("button");
+        button.dataset.removeId = entry.id;
+        button.setAttribute("aria-label", `${entry.foodName} kaydını sil`);
+        foodList.append(item);
     });
 
-    const totals = foodEntries.reduce(
-        (sum, entry) => ({
-            calories: sum.calories + Number(entry.calories || 0),
-            protein: sum.protein + Number(entry.protein || 0),
-            fat: sum.fat + Number(entry.fat || 0),
-            carbohydrates: sum.carbohydrates + Number(entry.carbohydrates || 0)
-        }),
-        { calories: 0, protein: 0, fat: 0, carbohydrates: 0 }
-    );
+    const totals = foodEntries.reduce((sum, entry) => ({
+        calories: sum.calories + entry.calories,
+        protein: sum.protein + entry.protein,
+        fat: sum.fat + entry.fat,
+        carbohydrates: sum.carbohydrates + entry.carbohydrates
+    }), { calories: 0, protein: 0, fat: 0, carbohydrates: 0 });
 
     totalCalories.textContent = formatNumber(totals.calories);
-    totalProtein.textContent = `${formatNumber(roundTo(totals.protein, 1))} g`;
-    totalFat.textContent = `${formatNumber(roundTo(totals.fat, 1))} g`;
-    totalCarbohydrates.textContent = `${formatNumber(roundTo(totals.carbohydrates, 1))} g`;
-    entryCount.textContent = foodEntries.length === 0
-        ? "Henüz yemek eklenmedi."
-        : `${foodEntries.length} kayıt eklendi.`;
-
+    totalProtein.textContent = `${formatNumber(totals.protein)} g`;
+    totalFat.textContent = `${formatNumber(totals.fat)} g`;
+    totalCarbohydrates.textContent = `${formatNumber(totals.carbohydrates)} g`;
+    entryCount.textContent = foodEntries.length ? `${foodEntries.length} kayıt eklendi.` : "Henüz yemek eklenmedi.";
     emptyLog.hidden = foodEntries.length > 0;
     clearLogButton.hidden = foodEntries.length === 0;
 }
 
 function validateEntry({ food, portionGrams }) {
-    if (!food || !Number.isFinite(portionGrams)) {
-        return "Lütfen bir yiyecek seç ve porsiyon miktarını gir.";
-    }
-
-    if (portionGrams < 1 || portionGrams > 3000) {
-        return "Porsiyon miktarı 1 ile 3000 gram arasında olmalı.";
-    }
-
+    if (!food || !Number.isFinite(portionGrams)) return "Lütfen bir yiyecek seç ve porsiyon miktarını gir.";
+    if (portionGrams < 1 || portionGrams > 3000) return "Porsiyon miktarı 1 ile 3000 gram arasında olmalı.";
     return "";
 }
 
-function loadEntries() {
-    try {
-        const storedEntries = JSON.parse(localStorage.getItem(storageKey));
-        return Array.isArray(storedEntries) ? storedEntries : [];
-    } catch (error) {
-        return [];
-    }
-}
-
-function saveEntries() {
-    localStorage.setItem(storageKey, JSON.stringify(foodEntries));
+function setFormLoading(isLoading) {
+    addFoodButton.disabled = isLoading;
+    addFoodButton.textContent = isLoading ? "Kaydediliyor..." : "Günlüğe Ekle";
 }
 
 function roundTo(value, digits) {
@@ -211,7 +261,7 @@ function roundTo(value, digits) {
 }
 
 function formatNumber(value) {
-    return Number(value).toLocaleString("tr-TR", { maximumFractionDigits: 1 });
+    return Number(value || 0).toLocaleString("tr-TR", { maximumFractionDigits: 1 });
 }
 
 function getTodayKey() {
@@ -219,6 +269,5 @@ function getTodayKey() {
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, "0");
     const day = String(today.getDate()).padStart(2, "0");
-
     return `${year}-${month}-${day}`;
 }
