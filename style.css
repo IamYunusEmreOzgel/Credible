@@ -8,9 +8,7 @@
     --primary: #315c43;
     --primary-dark: #244733;
     --accent: #d7e6d8;
-    --shadow: 0 24px 60px rgba(41, 57, 45, 0.12);
-    --radius-large: 28px;
-    --radius-medium: 18px;
+    --shadow: 12px 14px 0 rgba(49, 92, 67, 0.08);
     --container: 1180px;
 }
 
@@ -27,7 +25,11 @@ html {
 body {
     font-family: "Inter", sans-serif;
     color: var(--text);
-    background: var(--background);
+    background:
+        linear-gradient(rgba(49, 92, 67, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(49, 92, 67, 0.035) 1px, transparent 1px),
+        var(--background);
+    background-size: 42px 42px;
     line-height: 1.6;
 }
 
@@ -50,9 +52,9 @@ a {
     position: sticky;
     top: 0;
     z-index: 20;
-    background: rgba(246, 247, 242, 0.88);
-    border-bottom: 1px solid rgba(223, 228, 218, 0.85);
-    backdrop-filter: blur(16px);
+    background: rgba(246, 247, 242, 0.94);
+    border-bottom: 1px solid var(--line);
+    backdrop-filter: blur(12px);
 }
 
 .header-content {
@@ -77,9 +79,11 @@ a {
     height: 36px;
     display: grid;
     place-items: center;
-    border-radius: 11px;
+    border: 1px solid var(--primary-dark);
+    border-radius: 2px;
     color: #fff;
     background: var(--primary);
+    box-shadow: 4px 4px 0 var(--accent);
     font-size: 0.95rem;
 }
 
@@ -107,11 +111,13 @@ a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 12px;
+    border: 1px solid var(--primary-dark);
+    border-radius: 3px;
     color: #fff;
     background: var(--primary);
     font-weight: 600;
-    transition: transform 0.2s ease, background 0.2s ease;
+    box-shadow: 4px 4px 0 var(--accent);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .header-button {
@@ -128,7 +134,8 @@ a {
 .header-button:hover,
 .primary-button:hover {
     background: var(--primary-dark);
-    transform: translateY(-2px);
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--accent);
 }
 
 .hero {
@@ -146,6 +153,8 @@ a {
 .eyebrow {
     display: inline-block;
     margin-bottom: 18px;
+    padding-left: 14px;
+    border-left: 3px solid var(--primary);
     color: var(--primary);
     font-size: 0.78rem;
     font-weight: 700;
@@ -190,20 +199,18 @@ a {
 }
 
 .hero-notes span::before {
-    content: "";
+    content: "+";
     display: inline-block;
-    width: 7px;
-    height: 7px;
     margin-right: 8px;
-    border-radius: 50%;
-    background: var(--primary);
+    color: var(--primary);
+    font-weight: 700;
 }
 
 .summary-card {
     position: relative;
     padding: 30px;
-    border: 1px solid rgba(223, 228, 218, 0.9);
-    border-radius: var(--radius-large);
+    border: 1px solid var(--primary-dark);
+    border-radius: 4px 18px 4px 4px;
     background: var(--surface);
     box-shadow: var(--shadow);
 }
@@ -211,13 +218,12 @@ a {
 .summary-card::before {
     content: "";
     position: absolute;
-    inset: -30px -50px auto auto;
+    inset: -18px -18px auto auto;
     z-index: -1;
-    width: 210px;
-    height: 210px;
-    border-radius: 50%;
-    background: var(--accent);
-    filter: blur(2px);
+    width: 120px;
+    height: 120px;
+    border-top: 18px solid var(--accent);
+    border-right: 18px solid var(--accent);
 }
 
 .card-heading,
@@ -244,7 +250,8 @@ a {
 
 .date-label {
     padding: 7px 10px;
-    border-radius: 9px;
+    border: 1px solid var(--line);
+    border-radius: 2px;
     background: var(--surface-soft);
 }
 
@@ -297,8 +304,9 @@ a {
 }
 
 .calorie-details div {
-    padding-bottom: 18px;
+    padding: 0 0 18px 14px;
     border-bottom: 1px solid var(--line);
+    border-left: 2px solid var(--accent);
 }
 
 .calorie-details strong {
@@ -323,14 +331,13 @@ a {
 .bar {
     height: 7px;
     overflow: hidden;
-    border-radius: 999px;
+    border-radius: 1px;
     background: var(--surface-soft);
 }
 
 .bar span {
     display: block;
     height: 100%;
-    border-radius: inherit;
     background: var(--primary);
 }
 
@@ -356,15 +363,24 @@ a {
 .feature-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    gap: 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
 }
 
 .feature-card {
     min-height: 250px;
-    padding: 28px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-medium);
-    background: rgba(255, 255, 255, 0.5);
+    padding: 30px;
+    border-right: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.38);
+}
+
+.feature-card:last-child {
+    border-right: 0;
+}
+
+.feature-card:nth-child(2) {
+    background: rgba(238, 242, 232, 0.72);
 }
 
 .feature-number {
@@ -386,17 +402,20 @@ a {
 }
 
 .info-panel {
+    position: relative;
     display: grid;
     grid-template-columns: 0.8fr 1fr;
     gap: 80px;
     padding: 58px;
-    border-radius: var(--radius-large);
+    border-radius: 2px 2px 34px 2px;
     color: #fff;
     background: var(--primary-dark);
+    box-shadow: -10px 10px 0 var(--accent);
 }
 
 .info-panel .eyebrow {
     color: #bbd5c1;
+    border-left-color: #bbd5c1;
 }
 
 .steps {
@@ -423,8 +442,8 @@ a {
     height: 32px;
     display: grid;
     place-items: center;
-    border: 1px solid rgba(255, 255, 255, 0.28);
-    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 2px;
     font-size: 0.78rem;
 }
 
@@ -449,8 +468,8 @@ a {
 .calculator-box button {
     min-width: 150px;
     min-height: 48px;
-    border: 0;
-    border-radius: 12px;
+    border: 1px solid var(--line);
+    border-radius: 2px;
     color: var(--muted);
     background: var(--surface-soft);
     font: inherit;
@@ -493,10 +512,17 @@ footer {
 
     .feature-grid {
         grid-template-columns: 1fr;
+        border: 1px solid var(--line);
     }
 
     .feature-card {
         min-height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .feature-card:last-child {
+        border-bottom: 0;
     }
 
     .feature-card h3 {
@@ -542,7 +568,7 @@ footer {
 
     .summary-card {
         padding: 22px;
-        border-radius: 22px;
+        border-radius: 3px 14px 3px 3px;
     }
 
     .calorie-progress {
@@ -564,7 +590,7 @@ footer {
     .info-panel {
         gap: 36px;
         padding: 34px 24px;
-        border-radius: 22px;
+        border-radius: 2px 2px 22px 2px;
     }
 
     .calculator-box button {
