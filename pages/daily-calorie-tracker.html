@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Credible ile gün içinde tükettiğin yiyecekleri kaydet ve toplam kalorini takip et.">
+    <title>Günlük Kalori Takibi | Credible</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/daily-calorie-tracker.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-content">
+            <a class="brand" href="../index.html" aria-label="Credible ana sayfa">
+                <span class="brand-mark">C</span>
+                <span>Credible</span>
+            </a>
+
+            <nav class="main-nav" aria-label="Ana menü">
+                <a href="features.html">Özellikler</a>
+                <a href="calorie-calculator.html">Kalori İhtiyacını Hesapla</a>
+                <a href="daily-calorie-tracker.html" aria-current="page">Günlük Kalori Takibi</a>
+            </nav>
+
+            <a class="header-button" href="#food-form">Yemek Ekle</a>
+        </div>
+    </header>
+
+    <main class="tracker-page">
+        <section class="tracker-section">
+            <div class="container tracker-layout">
+                <div class="tracker-copy">
+                    <span class="eyebrow">Günlük tüketim kaydı</span>
+                    <h1>Yediklerini ekle, günün toplamını gör.</h1>
+                    <p>
+                        Tükettiğin yiyeceği, porsiyonunu ve kalori değerini kaydet. Credible gün boyunca
+                        aldığın toplam kaloriyi otomatik olarak hesaplasın.
+                    </p>
+
+                    <div class="daily-total" aria-live="polite">
+                        <span>Bugün alınan toplam</span>
+                        <div>
+                            <strong id="total-calories">0</strong>
+                            <small>kcal</small>
+                        </div>
+                        <p id="entry-count">Henüz yemek eklenmedi.</p>
+                    </div>
+                </div>
+
+                <div class="tracker-panel">
+                    <form id="food-form" class="food-form" novalidate>
+                        <div class="food-form-grid">
+                            <label class="tracker-field tracker-field-full">
+                                <span>Yiyecek adı</span>
+                                <input id="food-name" name="foodName" type="text" maxlength="60" placeholder="Örnek: Tavuklu pilav" required>
+                            </label>
+
+                            <label class="tracker-field">
+                                <span>Porsiyon</span>
+                                <input id="portion" name="portion" type="text" maxlength="30" placeholder="1 tabak" required>
+                            </label>
+
+                            <label class="tracker-field">
+                                <span>Kalori</span>
+                                <div class="tracker-input-wrap">
+                                    <input id="calories" name="calories" type="number" min="1" max="5000" step="1" placeholder="450" required>
+                                    <small>kcal</small>
+                                </div>
+                            </label>
+                        </div>
+
+                        <p id="food-error" class="form-error" role="alert"></p>
+                        <button class="add-food-button" type="submit">Günlüğe Ekle</button>
+                    </form>
+
+                    <section class="food-log" aria-labelledby="food-log-title">
+                        <div class="food-log-heading">
+                            <div>
+                                <span>Bugünün kayıtları</span>
+                                <h2 id="food-log-title">Yemek Günlüğü</h2>
+                            </div>
+                            <button id="clear-log" class="clear-log-button" type="button" hidden>Tümünü Temizle</button>
+                        </div>
+
+                        <p id="empty-log" class="empty-log">Eklediğin yiyecekler burada görünecek.</p>
+                        <ul id="food-list" class="food-list"></ul>
+                    </section>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="../js/daily-calorie-tracker.js"></script>
+</body>
+</html>
