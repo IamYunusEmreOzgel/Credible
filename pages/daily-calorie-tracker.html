@@ -11,6 +11,19 @@
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/daily-calorie-tracker.css">
     <style>
+        .mobile-menu-toggle {
+            display: none;
+            width: 44px;
+            height: 44px;
+            border: 1px solid var(--primary-dark);
+            border-radius: 3px;
+            color: var(--primary-dark);
+            background: var(--surface);
+            font: inherit;
+            font-size: 1.35rem;
+            cursor: pointer;
+        }
+
         .food-search-wrap {
             position: relative;
         }
@@ -62,6 +75,49 @@
             color: var(--muted);
             font-size: 0.86rem;
         }
+
+        @media (max-width: 920px) {
+            .header-content {
+                flex-wrap: wrap;
+                gap: 12px;
+                padding: 12px 0;
+            }
+
+            .mobile-menu-toggle {
+                display: grid;
+                place-items: center;
+                margin-left: auto;
+            }
+
+            .main-nav {
+                order: 3;
+                width: 100%;
+                display: none;
+                align-items: stretch;
+                gap: 0;
+                padding-top: 8px;
+                border-top: 1px solid var(--line);
+            }
+
+            .main-nav.is-open {
+                display: grid;
+            }
+
+            .main-nav a {
+                padding: 12px 4px;
+                border-bottom: 1px solid var(--line);
+            }
+
+            .header-button {
+                order: 4;
+                width: 100%;
+                display: none;
+            }
+
+            .header-button.is-open {
+                display: inline-flex;
+            }
+        }
     </style>
 </head>
 <body>
@@ -72,7 +128,9 @@
                 <span>Credible</span>
             </a>
 
-            <nav class="main-nav" aria-label="Ana menü">
+            <button id="mobile-menu-toggle" class="mobile-menu-toggle" type="button" aria-label="Menüyü aç" aria-controls="main-nav" aria-expanded="false">☰</button>
+
+            <nav id="main-nav" class="main-nav" aria-label="Ana menü">
                 <a href="features.html">Özellikler</a>
                 <a href="calorie-calculator.html">Kalori İhtiyacını Hesapla</a>
                 <a href="daily-calorie-tracker.html" aria-current="page">Günlük Kalori Takibi</a>
@@ -157,6 +215,27 @@
     <script src="../js/supabase-config.js"></script>
     <script src="../data/foods.js"></script>
     <script>
+        const mobileMenuToggle = document.querySelector("#mobile-menu-toggle");
+        const mainNavigation = document.querySelector("#main-nav");
+        const mobileLogoutButton = document.querySelector("#logout-button");
+
+        mobileMenuToggle.addEventListener("click", () => {
+            const isOpen = mainNavigation.classList.toggle("is-open");
+            mobileLogoutButton.classList.toggle("is-open", isOpen);
+            mobileMenuToggle.setAttribute("aria-expanded", String(isOpen));
+            mobileMenuToggle.setAttribute("aria-label", isOpen ? "Menüyü kapat" : "Menüyü aç");
+            mobileMenuToggle.textContent = isOpen ? "×" : "☰";
+        });
+
+        mainNavigation.addEventListener("click", (event) => {
+            if (!event.target.closest("a")) return;
+            mainNavigation.classList.remove("is-open");
+            mobileLogoutButton.classList.remove("is-open");
+            mobileMenuToggle.setAttribute("aria-expanded", "false");
+            mobileMenuToggle.setAttribute("aria-label", "Menüyü aç");
+            mobileMenuToggle.textContent = "☰";
+        });
+
         const searchableFoodInput = document.querySelector("#food-search");
         const foodSearchResults = document.querySelector("#food-search-results");
         const originalFoodSelect = document.querySelector("#food-select");
