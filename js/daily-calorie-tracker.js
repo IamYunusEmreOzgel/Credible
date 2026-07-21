@@ -12,6 +12,7 @@ const emptyLog = document.querySelector("#empty-log");
 const clearLogButton = document.querySelector("#clear-log");
 const logoutButton = document.querySelector("#logout-button");
 const addFoodButton = document.querySelector("#add-food-button");
+const whatsappShareButton = document.querySelector("#whatsapp-share-button");
 const totalCalories = document.querySelector("#total-calories");
 const totalProtein = document.querySelector("#total-protein");
 const totalFat = document.querySelector("#total-fat");
@@ -23,6 +24,8 @@ const foods = Array.isArray(window.FOOD_DATABASE) ? window.FOOD_DATABASE : [];
 const supabaseClient = window.credibleSupabase;
 let currentUser = null;
 let foodEntries = [];
+let dailyCalorieTarget = null;
+let currentTotals = { calories: 0, protein: 0, fat: 0, carbohydrates: 0 };
 
 initializePage();
 
@@ -32,6 +35,7 @@ foodForm.addEventListener("submit", addFoodEntry);
 foodList.addEventListener("click", removeFoodEntry);
 clearLogButton.addEventListener("click", clearTodayEntries);
 logoutButton.addEventListener("click", logout);
+whatsappShareButton.addEventListener("click", shareDailySummary);
 
 async function initializePage() {
     const { data, error } = await supabaseClient.auth.getUser();
@@ -43,7 +47,7 @@ async function initializePage() {
 
     currentUser = data.user;
     populateFoodSelect();
-    await loadEntries();
+    await Promise.all([loadEntries(), loadDailyTarget()]);
 }
 
 async function addFoodEntry(event) {
@@ -113,6 +117,22 @@ async function loadEntries() {
     renderEntries();
 }
 
+async function loadDailyTarget() {
+    const { data, error } = await supabaseClient
+        .from("user_profiles")
+        .select("daily_calorie_target")
+        .eq("user_id", currentUser.id)
+        .maybeSingle();
+
+    if (error) {
+        console.error("Günlük hedef alınamadı:", error);
+        dailyCalorieTarget = null;
+        return;
+    }
+
+    dailyCalorieTarget = data ? Number(data.daily_calorie_target) : null;
+}
+
 async function removeFoodEntry(event) {
     const removeButton = event.target.closest("[data-remove-id]");
     if (!removeButton) return;
@@ -155,6 +175,42 @@ async function logout() {
     logoutButton.disabled = true;
     await supabaseClient.auth.signOut();
     window.location.replace("login.html");
+}
+
+function shareDailySummary() {
+    if (foodEntries.length === 0) return;
+
+    const date = new Intl.DateTimeFormat("tr-TR", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    }).format(new Date());
+
+    const lines = [
+        `*Credible Günlük Beslenme Özeti*`,
+        date,
+        "",
+        `Alınan: *${formatNumber(currentTotals.calories)} kcal*`
+    ];
+
+    if (Number.isFinite(dailyCalorieTarget)) {
+        const remaining = dailyCalorieTarget - currentTotals.calories;
+        lines.push(`Hedef: ${formatNumber(dailyCalorieTarget)} kcal`);
+        lines.push(remaining >= 0
+            ? `Kalan: ${formatNumber(remaining)} kcal`
+            : `Hedef aşımı: ${formatNumber(Math.abs(remaining))} kcal`);
+    }
+
+    lines.push(
+        "",
+        `Protein: ${formatNumber(currentTotals.protein)} g`,
+        `Karbonhidrat: ${formatNumber(currentTotals.carbohydrates)} g`,
+        `Yağ: ${formatNumber(currentTotals.fat)} g`,
+        `Toplam kayıt: ${foodEntries.length}`
+    );
+
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(lines.join("\n"))}`;
+    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
 }
 
 function populateFoodSelect() {
@@ -228,20 +284,21 @@ function renderEntries() {
         foodList.append(item);
     });
 
-    const totals = foodEntries.reduce((sum, entry) => ({
+    currentTotals = foodEntries.reduce((sum, entry) => ({
         calories: sum.calories + entry.calories,
         protein: sum.protein + entry.protein,
         fat: sum.fat + entry.fat,
         carbohydrates: sum.carbohydrates + entry.carbohydrates
     }), { calories: 0, protein: 0, fat: 0, carbohydrates: 0 });
 
-    totalCalories.textContent = formatNumber(totals.calories);
-    totalProtein.textContent = `${formatNumber(totals.protein)} g`;
-    totalFat.textContent = `${formatNumber(totals.fat)} g`;
-    totalCarbohydrates.textContent = `${formatNumber(totals.carbohydrates)} g`;
+    totalCalories.textContent = formatNumber(currentTotals.calories);
+    totalProtein.textContent = `${formatNumber(currentTotals.protein)} g`;
+    totalFat.textContent = `${formatNumber(currentTotals.fat)} g`;
+    totalCarbohydrates.textContent = `${formatNumber(currentTotals.carbohydrates)} g`;
     entryCount.textContent = foodEntries.length ? `${foodEntries.length} kayıt eklendi.` : "Henüz yemek eklenmedi.";
     emptyLog.hidden = foodEntries.length > 0;
     clearLogButton.hidden = foodEntries.length === 0;
+    whatsappShareButton.disabled = foodEntries.length === 0;
 }
 
 function validateEntry({ food, portionGrams }) {
