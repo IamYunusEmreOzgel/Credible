@@ -49,14 +49,14 @@
     text-transform: uppercase;
 }
 
-.daily-total > div {
+.daily-total > div:first-of-type {
     display: flex;
     align-items: baseline;
     gap: 10px;
     margin-top: 8px;
 }
 
-.daily-total strong {
+.daily-total > div:first-of-type strong {
     font-family: var(--font-display);
     font-size: clamp(3rem, 6vw, 4.8rem);
     font-weight: 600;
@@ -65,13 +65,40 @@
 }
 
 .daily-total small,
-.daily-total p {
+.daily-total > p {
     color: var(--muted);
 }
 
-.daily-total p {
+.daily-total > p {
     margin-top: 12px;
     font-size: 0.84rem;
+}
+
+.macro-totals {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.macro-totals p {
+    display: grid;
+    gap: 2px;
+    padding: 12px 14px;
+    border-left: 2px solid var(--accent);
+    background: var(--surface-soft);
+}
+
+.macro-totals span {
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+.macro-totals strong {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 600;
 }
 
 .tracker-panel {
@@ -106,7 +133,8 @@
     font-weight: 700;
 }
 
-.tracker-field input {
+.tracker-field input,
+.tracker-field select {
     width: 100%;
     min-height: 50px;
     padding: 0 14px;
@@ -119,7 +147,12 @@
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.tracker-field input:focus {
+.tracker-field select {
+    cursor: pointer;
+}
+
+.tracker-field input:focus,
+.tracker-field select:focus {
     border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(49, 92, 67, 0.1);
 }
@@ -129,7 +162,7 @@
 }
 
 .tracker-input-wrap input {
-    padding-right: 58px;
+    padding-right: 72px;
 }
 
 .tracker-input-wrap small {
@@ -138,6 +171,44 @@
     right: 14px;
     color: var(--muted);
     transform: translateY(-50%);
+}
+
+.nutrition-preview {
+    margin-top: 20px;
+    padding: 18px;
+    border: 1px solid var(--line);
+    background: var(--surface-soft);
+}
+
+.nutrition-preview > span {
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.nutrition-preview > div {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 12px;
+}
+
+.nutrition-preview p {
+    display: grid;
+    gap: 2px;
+}
+
+.nutrition-preview strong {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 600;
+}
+
+.nutrition-preview small {
+    color: var(--muted);
+    font-size: 0.72rem;
 }
 
 .add-food-button {
@@ -244,10 +315,22 @@
     font-size: 0.8rem;
 }
 
-.food-item strong {
+.food-item-nutrition {
+    display: grid;
+    justify-items: end;
+    gap: 2px;
+}
+
+.food-item-nutrition strong {
     font-family: var(--font-display);
     font-size: 1.3rem;
     font-weight: 600;
+}
+
+.food-item-nutrition small {
+    color: var(--muted);
+    font-size: 0.72rem;
+    white-space: nowrap;
 }
 
 @media (max-width: 920px) {
@@ -275,7 +358,8 @@
         padding: 22px;
     }
 
-    .food-form-grid {
+    .food-form-grid,
+    .nutrition-preview > div {
         grid-template-columns: 1fr;
     }
 
@@ -290,6 +374,11 @@
 
     .food-item {
         grid-template-columns: 1fr auto;
+    }
+
+    .food-item-nutrition {
+        justify-items: start;
+        grid-column: 1 / -1;
     }
 
     .remove-food-button {
