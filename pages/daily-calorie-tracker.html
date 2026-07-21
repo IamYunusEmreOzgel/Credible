@@ -25,7 +25,7 @@
                 <a href="daily-calorie-tracker.html" aria-current="page">Günlük Kalori Takibi</a>
             </nav>
 
-            <a class="header-button" href="#food-form">Yemek Ekle</a>
+            <button id="logout-button" class="header-button" type="button">Çıkış Yap</button>
         </div>
     </header>
 
@@ -35,23 +35,17 @@
                 <div class="tracker-copy">
                     <span class="eyebrow">Günlük tüketim kaydı</span>
                     <h1>Yemeğini seç, porsiyonunu gir, günün toplamını gör.</h1>
-                    <p>
-                        Listeden tükettiğin yiyeceği seç ve gram cinsinden porsiyonunu gir. Credible;
-                        kalori, protein, yağ ve karbonhidrat değerlerini otomatik hesaplasın.
-                    </p>
+                    <p>Listeden tükettiğin yiyeceği seç ve gram cinsinden porsiyonunu gir. Credible; kalori, protein, yağ ve karbonhidrat değerlerini otomatik hesaplasın.</p>
 
                     <div class="daily-total" aria-live="polite">
                         <span>Bugün alınan toplam</span>
-                        <div>
-                            <strong id="total-calories">0</strong>
-                            <small>kcal</small>
-                        </div>
+                        <div><strong id="total-calories">0</strong><small>kcal</small></div>
                         <div class="macro-totals">
                             <p><span>Protein</span><strong id="total-protein">0 g</strong></p>
                             <p><span>Yağ</span><strong id="total-fat">0 g</strong></p>
                             <p><span>Karbonhidrat</span><strong id="total-carbohydrates">0 g</strong></p>
                         </div>
-                        <p id="entry-count">Henüz yemek eklenmedi.</p>
+                        <p id="entry-count">Kayıtlar yükleniyor...</p>
                     </div>
                 </div>
 
@@ -60,11 +54,8 @@
                         <div class="food-form-grid">
                             <label class="tracker-field tracker-field-full">
                                 <span>Yiyecek seç</span>
-                                <select id="food-select" name="foodId" required>
-                                    <option value="">Bir yiyecek seç</option>
-                                </select>
+                                <select id="food-select" name="foodId" required><option value="">Bir yiyecek seç</option></select>
                             </label>
-
                             <label class="tracker-field tracker-field-full">
                                 <span>Porsiyon miktarı</span>
                                 <div class="tracker-input-wrap">
@@ -85,18 +76,14 @@
                         </section>
 
                         <p id="food-error" class="form-error" role="alert"></p>
-                        <button class="add-food-button" type="submit">Günlüğe Ekle</button>
+                        <button id="add-food-button" class="add-food-button" type="submit">Günlüğe Ekle</button>
                     </form>
 
                     <section class="food-log" aria-labelledby="food-log-title">
                         <div class="food-log-heading">
-                            <div>
-                                <span>Bugünün kayıtları</span>
-                                <h2 id="food-log-title">Yemek Günlüğü</h2>
-                            </div>
+                            <div><span>Bugünün kayıtları</span><h2 id="food-log-title">Yemek Günlüğü</h2></div>
                             <button id="clear-log" class="clear-log-button" type="button" hidden>Tümünü Temizle</button>
                         </div>
-
                         <p id="empty-log" class="empty-log">Eklediğin yiyecekler burada görünecek.</p>
                         <ul id="food-list" class="food-list"></ul>
                     </section>
@@ -105,6 +92,8 @@
         </section>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-config.js"></script>
     <script src="../data/foods.js"></script>
     <script src="../js/daily-calorie-tracker.js"></script>
 </body>
