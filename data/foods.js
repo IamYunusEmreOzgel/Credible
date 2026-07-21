@@ -1,0 +1,20 @@
+window.FOOD_DATABASE = [
+    { id: "chicken-breast", name: "Tavuk göğsü (pişmiş)", calories: 165, protein: 31, fat: 3.6 },
+    { id: "rice", name: "Beyaz pirinç (pişmiş)", calories: 130, protein: 2.7, fat: 0.3 },
+    { id: "pasta", name: "Makarna (pişmiş)", calories: 157, protein: 5.8, fat: 0.9 },
+    { id: "egg", name: "Yumurta", calories: 143, protein: 12.6, fat: 9.5 },
+    { id: "whole-wheat-bread", name: "Tam buğday ekmeği", calories: 247, protein: 13, fat: 4.2 },
+    { id: "white-bread", name: "Beyaz ekmek", calories: 265, protein: 9, fat: 3.2 },
+    { id: "oats", name: "Yulaf ezmesi", calories: 389, protein: 16.9, fat: 6.9 },
+    { id: "yogurt", name: "Yoğurt", calories: 61, protein: 3.5, fat: 3.3 },
+    { id: "milk", name: "Tam yağlı süt", calories: 61, protein: 3.2, fat: 3.3 },
+    { id: "banana", name: "Muz", calories: 89, protein: 1.1, fat: 0.3 },
+    { id: "apple", name: "Elma", calories: 52, protein: 0.3, fat: 0.2 },
+    { id: "potato", name: "Haşlanmış patates", calories: 87, protein: 1.9, fat: 0.1 },
+    { id: "lentils", name: "Yeşil mercimek (pişmiş)", calories: 116, protein: 9, fat: 0.4 },
+    { id: "ground-beef", name: "Dana kıyma (pişmiş)", calories: 250, protein: 26, fat: 15 },
+    { id: "salmon", name: "Somon (pişmiş)", calories: 206, protein: 22, fat: 12 },
+    { id: "cheese", name: "Beyaz peynir", calories: 264, protein: 14, fat: 21 },
+    { id: "olive-oil", name: "Zeytinyağı", calories: 884, protein: 0, fat: 100 },
+    { id: "almonds", name: "Badem", calories: 579, protein: 21.2, fat: 49.9 }
+];
