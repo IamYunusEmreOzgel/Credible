@@ -6,12 +6,14 @@ const previewBasis = document.querySelector("#preview-basis");
 const previewCalories = document.querySelector("#preview-calories");
 const previewProtein = document.querySelector("#preview-protein");
 const previewFat = document.querySelector("#preview-fat");
+const previewCarbohydrates = document.querySelector("#preview-carbohydrates");
 const foodList = document.querySelector("#food-list");
 const emptyLog = document.querySelector("#empty-log");
 const clearLogButton = document.querySelector("#clear-log");
 const totalCalories = document.querySelector("#total-calories");
 const totalProtein = document.querySelector("#total-protein");
 const totalFat = document.querySelector("#total-fat");
+const totalCarbohydrates = document.querySelector("#total-carbohydrates");
 const entryCount = document.querySelector("#entry-count");
 const foodError = document.querySelector("#food-error");
 
@@ -47,7 +49,8 @@ foodForm.addEventListener("submit", (event) => {
         portionGrams,
         calories: nutrition.calories,
         protein: nutrition.protein,
-        fat: nutrition.fat
+        fat: nutrition.fat,
+        carbohydrates: nutrition.carbohydrates
     });
 
     saveEntries();
@@ -103,6 +106,7 @@ function updateNutritionPreview() {
     previewCalories.textContent = formatNumber(nutrition.calories);
     previewProtein.textContent = formatNumber(nutrition.protein);
     previewFat.textContent = formatNumber(nutrition.fat);
+    previewCarbohydrates.textContent = formatNumber(nutrition.carbohydrates);
     nutritionPreview.hidden = false;
 }
 
@@ -116,7 +120,8 @@ function calculateNutrition(food, portionGrams) {
     return {
         calories: roundTo(food.calories * multiplier, 0),
         protein: roundTo(food.protein * multiplier, 1),
-        fat: roundTo(food.fat * multiplier, 1)
+        fat: roundTo(food.fat * multiplier, 1),
+        carbohydrates: roundTo(Number(food.carbohydrates || 0) * multiplier, 1)
     };
 }
 
@@ -138,7 +143,7 @@ function renderEntries() {
         title.textContent = entry.foodName;
         portion.textContent = `${formatNumber(entry.portionGrams)} gram`;
         calories.textContent = `${formatNumber(entry.calories)} kcal`;
-        macros.textContent = `${formatNumber(entry.protein)} g protein · ${formatNumber(entry.fat)} g yağ`;
+        macros.textContent = `${formatNumber(entry.protein)} g protein · ${formatNumber(entry.fat)} g yağ · ${formatNumber(entry.carbohydrates || 0)} g karbonhidrat`;
         nutrition.className = "food-item-nutrition";
 
         removeButton.type = "button";
@@ -157,14 +162,16 @@ function renderEntries() {
         (sum, entry) => ({
             calories: sum.calories + Number(entry.calories || 0),
             protein: sum.protein + Number(entry.protein || 0),
-            fat: sum.fat + Number(entry.fat || 0)
+            fat: sum.fat + Number(entry.fat || 0),
+            carbohydrates: sum.carbohydrates + Number(entry.carbohydrates || 0)
         }),
-        { calories: 0, protein: 0, fat: 0 }
+        { calories: 0, protein: 0, fat: 0, carbohydrates: 0 }
     );
 
     totalCalories.textContent = formatNumber(totals.calories);
     totalProtein.textContent = `${formatNumber(roundTo(totals.protein, 1))} g`;
     totalFat.textContent = `${formatNumber(roundTo(totals.fat, 1))} g`;
+    totalCarbohydrates.textContent = `${formatNumber(roundTo(totals.carbohydrates, 1))} g`;
     entryCount.textContent = foodEntries.length === 0
         ? "Henüz yemek eklenmedi."
         : `${foodEntries.length} kayıt eklendi.`;
