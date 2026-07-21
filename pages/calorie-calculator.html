@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Credible ile günlük kalori ihtiyacını hesapla.">
+    <meta name="description" content="Credible ile günlük bazal metabolizma ihtiyacını hesapla.">
     <title>Kalori İhtiyacını Hesapla | Credible</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/calorie-calculator.css">
 </head>
 <body>
     <header class="site-header">
@@ -20,11 +21,90 @@
 
             <nav class="main-nav" aria-label="Ana menü">
                 <a href="features.html">Özellikler</a>
-                <a href="calorie-calculator.html">Kalori İhtiyacını Hesapla</a>
+                <a href="calorie-calculator.html" aria-current="page">Kalori İhtiyacını Hesapla</a>
             </nav>
 
-            <a class="header-button" href="calorie-calculator.html">Hemen Başla</a>
+            <a class="header-button" href="#calculator-form">Hemen Başla</a>
         </div>
     </header>
+
+    <main class="calculator-page">
+        <section class="calculator-intro">
+            <div class="container calculator-layout">
+                <div class="calculator-copy">
+                    <span class="eyebrow">Bazal metabolizma hesabı</span>
+                    <h1>Vücudunun dinlenirken harcadığı enerjiyi öğren.</h1>
+                    <p>
+                        Yaş, boy, kilo ve cinsiyet bilgilerine göre günlük bazal metabolizma hızını
+                        yaklaşık olarak hesapla.
+                    </p>
+                    <p class="calculator-note">
+                        Bu sonuç tahmini bir değerdir; günlük toplam enerji ihtiyacını göstermez.
+                    </p>
+                </div>
+
+                <div class="calculator-panel">
+                    <form id="calculator-form" class="bmr-form" novalidate>
+                        <fieldset class="gender-fieldset">
+                            <legend>Cinsiyet</legend>
+                            <div class="gender-options">
+                                <label>
+                                    <input type="radio" name="gender" value="male" checked>
+                                    <span>Erkek</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="gender" value="female">
+                                    <span>Kadın</span>
+                                </label>
+                            </div>
+                        </fieldset>
+
+                        <div class="form-grid">
+                            <label class="form-field">
+                                <span>Yaş</span>
+                                <div class="input-wrap">
+                                    <input id="age" name="age" type="number" min="18" max="100" step="1" placeholder="25" required>
+                                    <small>yıl</small>
+                                </div>
+                            </label>
+
+                            <label class="form-field">
+                                <span>Boy</span>
+                                <div class="input-wrap">
+                                    <input id="height" name="height" type="number" min="120" max="230" step="1" placeholder="175" required>
+                                    <small>cm</small>
+                                </div>
+                            </label>
+
+                            <label class="form-field form-field-full">
+                                <span>Kilo</span>
+                                <div class="input-wrap">
+                                    <input id="weight" name="weight" type="number" min="35" max="300" step="0.1" placeholder="75" required>
+                                    <small>kg</small>
+                                </div>
+                            </label>
+                        </div>
+
+                        <p id="form-error" class="form-error" role="alert"></p>
+                        <button class="calculate-button" type="submit">Bazal Metabolizmamı Hesapla</button>
+                    </form>
+
+                    <section id="result" class="result-panel" aria-live="polite" hidden>
+                        <span>Tahmini bazal metabolizma hızın</span>
+                        <div class="result-value">
+                            <strong id="bmr-value">0</strong>
+                            <small>kcal / gün</small>
+                        </div>
+                        <p>
+                            Bu değer, gün boyunca tamamen dinleniyor olsan bile vücudunun temel
+                            işlevlerini sürdürebilmek için harcadığı yaklaşık enerjidir.
+                        </p>
+                    </section>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="../js/calorie-calculator.js"></script>
 </body>
 </html>
