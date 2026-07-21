@@ -36,7 +36,7 @@
                 <div class="tracker-copy">
                     <span class="eyebrow">Günlük tüketim kaydı</span>
                     <h1>Yemeğini seç, porsiyonunu gir, günün toplamını gör.</h1>
-                    <p>Listeden tükettiğin yiyeceği seç ve gram cinsinden porsiyonunu gir. Credible; kalori, protein, yağ ve karbonhidrat değerlerini otomatik hesaplasın.</p>
+                    <p>Yiyecek adını yazarak ara, listeden seç ve gram cinsinden porsiyonunu gir. Credible; kalori, protein, yağ ve karbonhidrat değerlerini otomatik hesaplasın.</p>
 
                     <div class="daily-total" aria-live="polite">
                         <span>Bugün alınan toplam</span>
@@ -55,8 +55,9 @@
                     <form id="food-form" class="food-form" novalidate>
                         <div class="food-form-grid">
                             <label class="tracker-field tracker-field-full">
-                                <span>Yiyecek seç</span>
-                                <select id="food-select" name="foodId" required><option value="">Bir yiyecek seç</option></select>
+                                <span>Yiyecek ara ve seç</span>
+                                <input id="food-search" name="foodName" type="text" list="food-options" placeholder="Örneğin: tavuk, çorba, pilav" autocomplete="off" required>
+                                <datalist id="food-options"></datalist>
                             </label>
                             <label class="tracker-field tracker-field-full">
                                 <span>Porsiyon miktarı</span>
