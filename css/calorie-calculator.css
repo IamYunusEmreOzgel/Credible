@@ -121,7 +121,8 @@
     box-shadow: 4px 4px 0 var(--accent);
 }
 
-.input-wrap input {
+.input-wrap input,
+.input-wrap select {
     width: 100%;
     min-height: 54px;
     padding: 0 16px;
@@ -131,6 +132,10 @@
     background: transparent;
     font: inherit;
     font-size: 1rem;
+}
+
+.input-wrap select {
+    cursor: pointer;
 }
 
 .input-wrap small {
@@ -149,7 +154,8 @@
     font-weight: 600;
 }
 
-.calculate-button {
+.calculate-button,
+.save-target-button {
     min-height: 54px;
     border: 1px solid var(--primary-dark);
     border-radius: 3px;
@@ -162,10 +168,21 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
-.calculate-button:hover {
+.calculate-button:hover,
+.save-target-button:hover {
     background: var(--primary-dark);
     transform: translate(2px, 2px);
     box-shadow: 3px 3px 0 var(--accent);
+}
+
+.save-target-button {
+    width: 100%;
+    margin-top: 22px;
+}
+
+.save-target-button:disabled {
+    cursor: wait;
+    opacity: 0.7;
 }
 
 .result-panel {
@@ -175,10 +192,20 @@
     background: var(--surface-soft);
 }
 
-.result-panel > span {
+.result-summary-grid {
+    display: grid;
+    gap: 26px;
+}
+
+.result-panel span {
     color: var(--muted);
     font-size: 0.8rem;
     font-weight: 700;
+}
+
+.target-result {
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
 }
 
 .result-value {
@@ -195,6 +222,10 @@
     letter-spacing: -0.05em;
 }
 
+.result-value-small strong {
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+}
+
 .result-value small {
     color: var(--muted);
     font-weight: 700;
@@ -203,6 +234,13 @@
 .result-panel p {
     color: var(--muted);
     font-size: 0.88rem;
+}
+
+.save-target-status {
+    min-height: 22px;
+    margin-top: 14px;
+    color: var(--primary) !important;
+    font-weight: 700;
 }
 
 @media (max-width: 920px) {
