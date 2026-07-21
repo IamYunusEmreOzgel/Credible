@@ -35,23 +35,31 @@ async function initializeHomeSummary() {
 
     summaryLoginLink.textContent = "Yemek günlüğüne git";
     summaryLoginLink.href = "pages/daily-calorie-tracker.html";
-    await loadTodaySummary();
+    await loadTodaySummary(session.user.id);
 }
 
-async function loadTodaySummary() {
+async function loadTodaySummary(userId) {
     summaryStatus.textContent = "Bugünkü kayıtlar yükleniyor...";
 
-    const { data, error } = await homeSupabase
-        .from("food_entries")
-        .select("calories, protein, fat, carbohydrates")
-        .eq("entry_date", getTodayKey());
+    const [entriesResult, profileResult] = await Promise.all([
+        homeSupabase
+            .from("food_entries")
+            .select("calories, protein, fat, carbohydrates")
+            .eq("entry_date", getTodayKey()),
+        homeSupabase
+            .from("user_profiles")
+            .select("daily_calorie_target")
+            .eq("user_id", userId)
+            .maybeSingle()
+    ]);
 
-    if (error) {
+    if (entriesResult.error) {
         showSummaryError("Bugünkü kayıtlar alınamadı.");
         return;
     }
 
-    const totals = (data || []).reduce(
+    const entries = entriesResult.data || [];
+    const totals = entries.reduce(
         (sum, entry) => ({
             calories: sum.calories + Number(entry.calories || 0),
             protein: sum.protein + Number(entry.protein || 0),
@@ -65,13 +73,33 @@ async function loadTodaySummary() {
     summaryProtein.textContent = `${formatNumber(totals.protein)} g`;
     summaryCarbohydrates.textContent = `${formatNumber(totals.carbohydrates)} g`;
     summaryFat.textContent = `${formatNumber(totals.fat)} g`;
-    summaryTarget.textContent = "Belirlenmedi";
-    summaryRemaining.textContent = "—";
-    summaryStatus.textContent = data.length === 0
-        ? "Bugün henüz yemek eklenmedi."
-        : `${data.length} kayıt üzerinden hesaplandı.`;
 
-    progressCircle.style.setProperty("--summary-progress", "0deg");
+    const dailyTarget = Number(profileResult.data?.daily_calorie_target || 0);
+
+    if (profileResult.error) {
+        summaryTarget.textContent = "Yüklenemedi";
+        summaryRemaining.textContent = "—";
+        progressCircle.style.setProperty("--summary-progress", "0deg");
+    } else if (dailyTarget > 0) {
+        const remaining = dailyTarget - totals.calories;
+        const progressRatio = Math.min(Math.max(totals.calories / dailyTarget, 0), 1);
+
+        summaryTarget.textContent = `${formatNumber(dailyTarget)} kcal`;
+        summaryRemaining.textContent = remaining >= 0
+            ? `${formatNumber(remaining)} kcal`
+            : `${formatNumber(Math.abs(remaining))} kcal aşıldı`;
+        progressCircle.style.setProperty("--summary-progress", `${progressRatio * 360}deg`);
+    } else {
+        summaryTarget.textContent = "Belirlenmedi";
+        summaryRemaining.textContent = "—";
+        summaryLoginLink.textContent = "Hedefini hesapla";
+        summaryLoginLink.href = "pages/calorie-calculator.html";
+        progressCircle.style.setProperty("--summary-progress", "0deg");
+    }
+
+    summaryStatus.textContent = entries.length === 0
+        ? "Bugün henüz yemek eklenmedi."
+        : `${entries.length} kayıt üzerinden hesaplandı.`;
 }
 
 function showLoggedOutSummary() {
