@@ -73,5 +73,8 @@ window.FOOD_DATABASE = [
     { id: "cocoa-cake", name: "Kakaolu kek", calories: 381, protein: 5.8, fat: 18, carbohydrates: 54 },
     { id: "wet-cake", name: "Islak kek", calories: 383, protein: 6.7, fat: 23.4, carbohydrates: 35.8 },
     { id: "sekerpare", name: "Şekerpare", calories: 296, protein: 3.2, fat: 6.8, carbohydrates: 55.5 },
-    { id: "chicken-keskek", name: "Tavuklu keşkek", calories: 177, protein: 15.1, fat: 4.1, carbohydrates: 19.8 }
+    { id: "chicken-keskek", name: "Tavuklu keşkek", calories: 177, protein: 15.1, fat: 4.1, carbohydrates: 19.8 },
+    { id: "baked-mushrooms", name: "Fırında mantar", calories: 80, protein: 6.7, fat: 0.6, carbohydrates: 12.9 },
+    { id: "hummus", name: "Humus", calories: 339, protein: 8.2, fat: 24.9, carbohydrates: 18.9 },
+    { id: "atom-meze", name: "Atom mezesi", calories: 93, protein: 3, fat: 6.6, carbohydrates: 5.3 }
 ];
